@@ -15,21 +15,42 @@ public class BattleService {
     }
 
     public AdventureResult battle(HeroProfile hero, BossEnemy boss, AttackAction action) {
-        // TODO: Implement the battle flow.
-        // Questions to answer:
-        // - Who attacks first?
-        // - How many rounds are allowed?
-        // - How is damage resolved?
-        // - How will randomness affect the result, if at all?
         AdventureResult result = new AdventureResult();
-        result.setWinner("TODO");
-        result.setRounds(0);
-        result.setReward("TODO");
-        result.addLine("TODO: implement battle logic");
 
-        // Keep the field in use so students can decide whether to rely on it.
-        if (random.nextInt(1) == 0) {
-            // TODO: Replace placeholder branch with real deterministic or random logic.
+        int rounds = 0;
+        while (hero.isAlive() && boss.isAlive()) {
+            rounds++;
+            result.addLine("Round " + rounds + " begins.");
+
+            int heroDamage = Math.max(1, action.getDamage());
+            boss.takeDamage(heroDamage);
+            result.addLine(hero.getName() + " uses " + action.getActionName() + " for " + heroDamage + " damage.");
+
+            if (boss.isAlive()) {
+                int bossDamage = Math.max(1, boss.getAttackPower());
+                hero.takeDamage(bossDamage);
+                result.addLine(boss.getName() + " strikes back for " + bossDamage + " damage.");
+            }
+
+            result.addLine("Status: " + hero.getName() + " HP = " + hero.getHealth() + ", " + boss.getName() + " HP = " + boss.getHealth() + ".");
+        }
+
+        result.setRounds(rounds);
+
+        if (hero.isAlive() && !boss.isAlive()) {
+            result.setWinner("Hero victory: " + hero.getName());
+        } 
+        
+        else if (!hero.isAlive() && boss.isAlive()) {
+            result.setWinner("Boss victory: " + boss.getName());
+        } 
+        
+        else if (hero.isAlive()) {
+            result.setWinner("Hero survival: " + hero.getName());
+        } 
+        
+        else {
+            result.setWinner("Draw");
         }
 
         return result;

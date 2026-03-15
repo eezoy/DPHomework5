@@ -6,11 +6,21 @@ import com.narxoz.rpg.hero.HeroProfile;
 
 public class PreparationService {
     public String prepare(HeroProfile hero, BossEnemy boss, AttackAction action) {
-        // TODO: Validate inputs and return a useful preparation summary.
-        // You may also decide to initialize temporary state here.
         if (hero == null || boss == null || action == null) {
-            return "TODO: invalid preparation state";
+            return "Preparation failed: hero, boss, and action must all be provided.";
         }
-        return "TODO: preparation complete";
+
+        if (!hero.isAlive()) {
+            return "Preparation failed: the hero is already defeated.";
+        }
+
+        if (!boss.isAlive()) {
+            return "Preparation failed: the boss is already defeated.";
+        }
+
+        return "Preparation complete: "
+                + hero.getName() + " enters with " + hero.getHealth() + " HP, "
+                + boss.getName() + " guards the dungeon with " + boss.getHealth() + " HP, using "
+                + action.getActionName() + " for " + action.getDamage() + " damage.";
     }
 }
