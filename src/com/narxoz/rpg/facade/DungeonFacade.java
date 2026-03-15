@@ -23,12 +23,18 @@ public class DungeonFacade {
             result.setWinner("No contest");
             result.setRounds(0);
             result.setReward(rewardService.determineReward(result));
+            result.addLine("Reward: " + result.getReward());
             return result;
         }
 
-        result = battleService.battle(hero, boss, action);
-        result.addLine(preparationSummary);
+        AdventureResult battleResult = battleService.battle(hero, boss, action);
+        for (String line : battleResult.getLog()) {
+            result.addLine(line);
+        }
+        result.setWinner(battleResult.getWinner());
+        result.setRounds(battleResult.getRounds());
         result.setReward(rewardService.determineReward(result));
+        result.addLine("Reward: " + result.getReward());
         return result;
     }
 }

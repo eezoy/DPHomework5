@@ -1,10 +1,6 @@
 package com.narxoz.rpg;
 
-import com.narxoz.rpg.decorator.AttackAction;
-import com.narxoz.rpg.decorator.BasicAttack;
-import com.narxoz.rpg.decorator.CriticalFocusDecorator;
-import com.narxoz.rpg.decorator.FireRuneDecorator;
-import com.narxoz.rpg.decorator.PoisonCoatingDecorator;
+import com.narxoz.rpg.decorator.*;
 import com.narxoz.rpg.enemy.BossEnemy;
 import com.narxoz.rpg.facade.AdventureResult;
 import com.narxoz.rpg.facade.DungeonFacade;
@@ -14,45 +10,51 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== Homework 5 Demo: Decorator + Facade ===\n");
 
-        // TODO: Create a hero and a boss with your own meaningful stats.
-        HeroProfile hero = new HeroProfile("TODO Hero", 100);
-        BossEnemy boss = new BossEnemy("TODO Boss", 120, 15);
-
-        // TODO: Start with a base action and then create several decorated versions.
         AttackAction basic = new BasicAttack("Strike", 10);
-        AttackAction enhanced = new FireRuneDecorator(
-                new PoisonCoatingDecorator(
-                        new CriticalFocusDecorator(basic)
-                )
-        );
+        AttackAction fireStrike = new FireRuneDecorator(new BasicAttack("Strike", 10));
+        AttackAction venomStrike = new PoisonCoatingDecorator(new BasicAttack("Strike", 10));
+        AttackAction combo = new FireRuneDecorator(new PoisonCoatingDecorator(new CriticalFocusDecorator(new BasicAttack("Strike", 10))));
 
         System.out.println("--- Decorator Preview ---");
-        System.out.println("Base action: " + basic.getActionName());
-        System.out.println("Base damage: " + basic.getDamage());
-        System.out.println("Base effects: " + basic.getEffectSummary());
+        System.out.println("Base:");
+        System.out.println("  Name: " + basic.getActionName());
+        System.out.println("  Damage preview: " + basic.getDamage());
+        System.out.println("  Effects: " + basic.getEffectSummary());
         System.out.println();
-        System.out.println("Enhanced action: " + enhanced.getActionName());
-        System.out.println("Enhanced damage: " + enhanced.getDamage());
-        System.out.println("Enhanced effects: " + enhanced.getEffectSummary());
 
-        // TODO: Replace the placeholder preview above with richer proof of runtime composition.
+        System.out.println("Fire Upgrade:");
+        System.out.println("  Name: " + fireStrike.getActionName());
+        System.out.println("  Damage preview: " + fireStrike.getDamage());
+        System.out.println("  Effects: " + fireStrike.getEffectSummary());
+        System.out.println();
 
-        System.out.println("\n--- Facade Preview ---");
-        DungeonFacade facade = new DungeonFacade().setRandomSeed(42L);
-        AdventureResult result = facade.runAdventure(hero, boss, enhanced);
+        System.out.println("Poison Upgrade:");
+        System.out.println("  Name: " + venomStrike.getActionName());
+        System.out.println("  Damage preview: " + venomStrike.getDamage());
+        System.out.println("  Effects: " + venomStrike.getEffectSummary());
+        System.out.println();
 
+        System.out.println("Stacked Combo:");
+        System.out.println("  Name: " + combo.getActionName());
+        System.out.println("  Damage preview: " + combo.getDamage());
+        System.out.println("  Effects: " + combo.getEffectSummary());
+        System.out.println();
+
+        System.out.println("--- Facade Preview ---");
+        HeroProfile hero = new HeroProfile("Warrior", 95);
+        BossEnemy boss = new BossEnemy("Orc Warlord", 110, 14);
+        DungeonFacade facade = new DungeonFacade().setRandomSeed(67L);
+        AdventureResult result = facade.runAdventure(hero, boss, combo);
+
+        System.out.println("Adventure log:");
+        for (String line : result.getLog()) System.out.println("- " + line);
+
+        System.out.println();
+        System.out.println("Final Summary:");
         System.out.println("Winner: " + result.getWinner());
         System.out.println("Rounds: " + result.getRounds());
         System.out.println("Reward: " + result.getReward());
-        for (String line : result.getLog()) {
-            System.out.println(line);
-        }
-
-        // TODO: Expand this demo so it clearly proves:
-        // 1) multiple decorator combinations
-        // 2) one full dungeon run through the facade
-        // 3) readable final summary
-
-        System.out.println("\n=== Demo Complete ===");
+    
+        System.out.println("=== Demo Complete ===");
     }
 }

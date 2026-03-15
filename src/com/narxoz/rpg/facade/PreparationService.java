@@ -18,9 +18,11 @@ public class PreparationService {
             return "Preparation failed: the boss is already defeated.";
         }
 
-        return "Preparation complete: "
-                + hero.getName() + " enters with " + hero.getHealth() + " HP, "
-                + boss.getName() + " guards the dungeon with " + boss.getHealth() + " HP, using "
-                + action.getActionName() + " for " + action.getDamage() + " damage.";
+        return "Preparation complete: Hero " + hero.getName()
+        + " (" + hero.getHealth() + " HP) vs Boss " + boss.getName()
+        + " (" + boss.getHealth() + " HP). "
+        + "Action ready: " + action.getActionName()
+        + ", damage " + action.getDamage()
+        + ", effects: " + action.getEffectSummary().trim();
     }
 }
