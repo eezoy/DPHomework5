@@ -1,25 +1,27 @@
 package com.narxoz.rpg.decorator;
 
+import java.util.Random;
+
 public class PoisonCoatingDecorator extends ActionDecorator {
+    private Random random = new Random();
+
     public PoisonCoatingDecorator(AttackAction wrappedAction) {
         super(wrappedAction);
     }
 
     @Override
     public String getActionName() {
-        // TODO: Decide how this decorator changes the visible action name.
-        return super.getActionName();
+        return super.getActionName() + " Poison coating";
     }
 
     @Override
     public int getDamage() {
-        // TODO: Add poison-related behavior on top of wrapped damage.
-        return super.getDamage();
+        int poisonDamage = random.nextInt(10);
+        return super.getDamage() + poisonDamage;
     }
 
     @Override
     public String getEffectSummary() {
-        // TODO: Append or compose the poison effect description.
-        return super.getEffectSummary();
+        return super.getEffectSummary() + " Poison coating - adds poison damage over time.";
     }
 }
